@@ -17,11 +17,36 @@ export default function Home() {
   console.log('-----------');
   console.log('mmr_mes');
   console.log(monthly_mmr);
+
+  const months = [
+    '01',
+    '02',
+    '03',
+    '04',
+    '05',
+    '06',
+    '07',
+    '08',
+    '09',
+    '10',
+    '11',
+    '12',
+  ];
+  const mrr2022 = months.map((month) => monthly_mmr['2022'][month] || 0);
+  const mrr2023 = months.map((month) => monthly_mmr['2023'][month] || 0);
+
+  const data = {
+    labels: months.map((month) => `Month ${month}`),
+    datasets: [
+      { label: '2022', data: mrr2022, backgroundColor: '#61DBFB' },
+      { label: '2023', data: mrr2023, backgroundColor: '#FF6384' },
+    ],
+  };
   return (
     <main>
       <div>Hello world</div>
       <div>
-        <BarChart />
+        <BarChart data={data} />
       </div>
     </main>
 

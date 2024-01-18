@@ -38,11 +38,11 @@ fs.createReadStream('src/helpers/example.csv')
   });
 
 export function test_parse() {
-  console.log(json_array);
+  // console.log(json_array);
 }
 
 export function toDate(string) {
-  console.log(string);
+  // console.log(string);
   const [datePart, timePart] = string.split(' ');
 
   let [month, day, year] = datePart.split('/');
@@ -53,7 +53,7 @@ export function toDate(string) {
 
   const formattedString = `${year}-${month}-${day} ${timePart}`;
 
-  console.log(formattedString);
+  // console.log(formattedString);
   return new Date(formattedString);
 }
 
