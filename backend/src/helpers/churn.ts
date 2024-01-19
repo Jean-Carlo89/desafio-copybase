@@ -1,18 +1,12 @@
 import dayjs from "dayjs";
+import { processCSV } from "./csv";
+import path from "path";
 function parseDate(dateString) {
   if (!dateString) return null;
   //   const [month, day, year, time] = dateString.split(/[/ ]/);
   //   return new Date(`${year}-${month}-${day}T${time}`);
   return new Date(dateString);
 }
-
-//Função para converter a data no formato "M/D/YY H:mm" em um objeto Date
-// function parseDate(dateString) {
-//   const [date, time] = dateString.split(" ");
-//   const [month, day, year] = date.split("/");
-//   const [hours, minutes] = time.split(":");
-//   return new Date(`20${year}`, month - 1, day, hours, minutes);
-// }
 
 export type user_data = {
   quantidade_cobranca: string;
@@ -62,7 +56,7 @@ export function calculate_active_and_churn_users(subs) {
       let churn_month;
 
       if (is_annual_subscription) {
-        // * consider churn after the 12 month period for anual subs
+        // * consider churn after the 12 mont period for anual subs
         churn_month = format_data_to_month_year(add_months(new Date(sub.data_inicio), 12 * charge_quantity));
       } else if (sub.data_cancelamento) {
         //* monhtly subs
@@ -202,15 +196,31 @@ const fake_json_array = [
 //   console.log("Taxa de Churn (Array):", taxaChurnCalculada);
 // })();
 
-export function calculateMonthlyChurnTax(array: user_data[]) {
-  const res = calculate_active_and_churn_users(fake_json_array);
+// export function calculateMonthlyChurnTax(array: user_data[]) {
+//   const res = calculate_active_and_churn_users(fake_json_array);
 
+//   const active = reformatarDadosPorAno(res.usuariosAtivosPorMes);
+//   const churn = reformatarDadosPorAno(res.churnPorMes);
+
+//   const churn_tax = caclulateChurnTax(active, churn);
+
+//   console.log(churn_tax);
+//   return churn_tax;
+// }
+
+// calculateMonthlyChurnTax(fake_json_array);
+
+export async function calculateMonthlyChurnTax(array: user_data[]) {
+  // const array_json = await processCSV(path.join(__dirname, "example.csv"));
+  const res = calculate_active_and_churn_users(array);
+
+  // console.log({ res });
   const active = reformatarDadosPorAno(res.usuariosAtivosPorMes);
   const churn = reformatarDadosPorAno(res.churnPorMes);
 
   const churn_tax = caclulateChurnTax(active, churn);
 
-  console.log(churn_tax);
+  // console.log(churn_tax);
   return churn_tax;
 }
 
