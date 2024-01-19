@@ -1,20 +1,24 @@
 'use client';
-import {
-  caclulate_mmr,
-  calculate_monthly_mmr,
-  test_parse,
-} from '@/helpers/mmr';
+
 import Image from 'next/image';
-import { BarChart } from './components/chart';
+import { BarChart } from './components/BarChart';
 import React, { useEffect, useState } from 'react';
 import { stringify } from 'querystring';
+import { LineChart } from './components/LineChart';
+import FileUpload from './components/FileUpload';
 
 export default function Home() {
-  const [mmr, setMmr] = useState<
+  const [mrr, setMrr] = useState<
+    [{ year: string; months: { [key: string]: number } }]
+  >([]);
+
+  const [churnRate, setChurnRate] = useState<
     [{ year: string; months: { [key: string]: number } }]
   >([]);
 
   const [selectedYears, setSelectedYears] = useState([]);
+
+  const [currentMetric, setCurrentMetric] = useState([]);
 
   const monthly_mmr = [
     {
@@ -52,13 +56,49 @@ export default function Home() {
     },
   ];
 
+  const fake_monthly_churn_rate = [
+    {
+      year: '2022',
+      months: {
+        '10': 6.046511627906977,
+        '11': 6.164383561643835,
+        '12': 3.9260969976905313,
+        '06': 8.539944903581267,
+        '03': 20.077220077220076,
+        '01': 0,
+        '05': 13.564668769716087,
+        '04': 11.661807580174926,
+        '07': 9.090909090909092,
+        '02': 28.019323671497588,
+        '09': 5.4892601431980905,
+        '08': 6.746987951807229,
+      },
+    },
+    {
+      year: '2023',
+      months: {
+        '05': 1.530612244897959,
+        '02': 0.9933774834437087,
+        '08': 1.183431952662722,
+        '04': 0.423728813559322,
+        '01': 1.8970189701897018,
+        '07': 0.5714285714285714,
+        '06': 0.5076142131979695,
+      },
+    },
+  ];
+
   useEffect(() => {
-    setMmr(monthly_mmr);
+    setMrr(monthly_mmr);
     const returned_years = monthly_mmr.map((item) => {
       return item.year;
     });
 
+    setChurnRate([]);
+
     setSelectedYears(returned_years);
+
+    setCurrentMetric('mrr');
   }, []);
 
   const MonthNames = [
@@ -94,9 +134,27 @@ export default function Home() {
       };
     });
 
+  const datasets_churn = churnRate
+    .filter((yearData) => selectedYears.includes(yearData.year))
+    .map((yearData) => {
+      const monthlyData = months.map(
+        (month) => yearData.months[month.number] || 0,
+      );
+      return {
+        label: yearData.year,
+        data: monthlyData,
+        backgroundColor: generateRandomColor(),
+      };
+    });
+
   const data = {
     labels: months.map((month) => month.name),
     datasets: datasets,
+  };
+
+  const data_2 = {
+    labels: months.map((month) => month.name),
+    datasets: datasets_churn,
   };
 
   function generateRandomColor() {
@@ -114,9 +172,28 @@ export default function Home() {
     }
   }
 
+  function handleMetricSelection(metric: string) {
+    setCurrentMetric(metric);
+  }
+
   return (
-    <main>
+    <main className=" min-w-[700px] min-h-[700px] border-4 border-green-200 ">
       <div>Hello world</div>
+
+      <FileUpload setChurnRate={setChurnRate} />
+      <div>
+        {['mrr', 'churn rate'].map((metric) => (
+          <label key={metric}>
+            <input
+              type="radio"
+              name="metric"
+              checked={currentMetric.includes(metric)}
+              onChange={() => handleMetricSelection(metric)}
+            />
+            {metric}
+          </label>
+        ))}
+      </div>
 
       <div>
         {['2022', '2023'].map((year) => (
@@ -130,9 +207,66 @@ export default function Home() {
           </label>
         ))}
       </div>
-      <div>
-        <BarChart data={data} />
+      <div className=" w-[1200px] h-[800px] border-2 border-yellow-100 mx-auto">
+        {renderChart(currentMetric)}
       </div>
     </main>
   );
+
+  function renderChart(metric: string) {
+    let default_options = {
+      maintainaspectratio: false,
+      responsive: true,
+    };
+
+    console.log(metric);
+    switch (metric) {
+      case 'mrr':
+        return (
+          <BarChart
+            data={data}
+            options={{
+              maintainAspectRatio: false, // Don't maintain w/h ratio
+            }}
+          />
+        );
+      case 'churn rate':
+        let default_options = {
+          maintainaspectratio: false,
+          responsive: true,
+
+          scales: {
+            y: {
+              // beginAtZero: true,
+              ticks: {
+                callback: (value) => `${value}%`,
+              },
+            },
+          },
+        };
+
+        return (
+          <div className="  border-4 border-orange-100 ">
+            <BarChart
+              data={data_2}
+              options={{
+                maintainAspectRatio: false, // Don't maintain w/h ratio
+                responsive: true,
+                height: '80vh',
+                scales: {
+                  y: {
+                    // beginAtZero: true,
+                    ticks: {
+                      callback: (value) => `${value}%`,
+                    },
+                  },
+                },
+              }}
+            />
+          </div>
+        );
+      default:
+        return null;
+    }
+  }
 }

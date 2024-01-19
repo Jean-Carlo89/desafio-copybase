@@ -15,15 +15,13 @@ import {
 
 ChartJS.register(BarElement, CategoryScale, LinearScale, Tooltip, Legend);
 
-// export default function BarChart() {
-//   return <Bar data={data_test} options={}></Bar>;
-// }
-
 type BarChartProps = {
   data: ChartData<'bar', number[], string>;
+
+  options: any;
 };
 
-export const BarChart = ({ data }: BarChartProps) => {
+export const BarChart = ({ data, options }: BarChartProps) => {
   const fake_data = {
     labels: ['Mon', 'tue'],
     datasets: [
@@ -31,10 +29,16 @@ export const BarChart = ({ data }: BarChartProps) => {
     ],
   };
 
-  const options = {};
+  console.log(data);
+
   return (
     <div>
-      <Bar data={data} options={options}></Bar>
+      <Bar
+        data={data}
+        options={options}
+        height="650px"
+        title="Chart.js Line Chart"
+      ></Bar>
     </div>
   );
 };
