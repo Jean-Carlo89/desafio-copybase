@@ -6,6 +6,8 @@ import { processCSV } from "../helpers/csv";
 import { calculateMonthlyChurnTax, user_data } from "../helpers/churn";
 import fs from "fs";
 import { calculate_mrr } from "../helpers/mrr/mrr";
+import { processXLSX } from "../helpers/xlsx";
+import { DevError } from "../errors/devError";
 
 const app = express();
 
@@ -47,34 +49,57 @@ app.use(express.text());
 app.use(express.urlencoded({ extended: true }));
 
 app.post("/api/upload", upload.single("file"), async function (req, res) {
-  const fileName = req.file.filename;
+  try {
+    const fileName = req.file.filename;
 
-  console.log(fileName);
-  //const filePath = path.join(__dirname, "../../uploads", fileName);
+    const filePath = path.join(__dirname, "../../uploads", fileName);
 
-  const filePath = path.join(__dirname, "../helpers/", "example.csv");
+    const fileExtension = path.extname(fileName).toLowerCase();
 
-  console.log(filePath);
-  const array_json = await processCSV(filePath);
+    //const filePath = path.join(__dirname, "../helpers/", "example.csv");
 
-  // console.log(array_json);
-  const churn_tax = await calculateMonthlyChurnTax(array_json as user_data[]);
-  const mrr = calculate_mrr(array_json as user_data[]);
+    let array_json: user_data[];
 
-  const data = { churn_tax: churn_tax, mrr };
-  let years = new Set();
+    if (fileExtension === ".csv") {
+      array_json = await processCSV(filePath);
+    } else if (fileExtension === ".xlsx") {
+      array_json = await processXLSX(filePath);
+    } else {
+      throw new DevError("Unsupported file type");
+    }
 
-  data.churn_tax.forEach((item) => years.add(item.year));
-  data.mrr.forEach((item) => years.add(item.year));
+    const churn_tax = await calculateMonthlyChurnTax(array_json as user_data[]);
+    const mrr = calculate_mrr(array_json as user_data[]);
 
-  let years_array = Array.from(years).map((year) => parseInt(year as any));
-  years_array.sort((a, b) => a - b);
+    const data = { churn_tax: churn_tax, mrr };
+    let years = new Set();
 
-  console.log(years_array);
+    data.churn_tax.forEach((item) => years.add(item.year));
+    data.mrr.forEach((item) => years.add(item.year));
 
-  const return_data = { ...data, years: years_array };
+    let years_array = Array.from(years).map((year) => parseInt(year as any));
+    years_array.sort((a, b) => a - b);
 
-  return res.send(return_data);
+    const return_data = { ...data, years: years_array };
+
+    fs.unlink(filePath, (err) => {
+      if (err) {
+        console.error("Error deleting file:", err);
+      } else {
+        console.log("File deleted successfully.");
+      }
+    });
+
+    return res.send(return_data);
+  } catch (error) {
+    if (error instanceof DevError) {
+      console.error(error);
+
+      return res.status(400).send(error.message);
+    }
+    console.log(error);
+    res.status(500).send("There was a an error");
+  }
 });
 
 const port = 3001;

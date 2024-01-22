@@ -1,8 +1,3 @@
-import csv from "csv-parser";
-
-import fs from "fs";
-import path from "path";
-import { stub_mrr_json_array } from "./stub_mrr";
 import { user_data } from "../churn";
 
 export function calculate_mrr(array: user_data[]) {
@@ -11,7 +6,7 @@ export function calculate_mrr(array: user_data[]) {
 
   array.forEach((subscription) => {
     // if (subscription.status === "Ativa") {
-    if (subscription.status) {
+    if (subscription.status && parseInt(subscription.quantidade_cobranca) !== 0) {
       const date = new Date(subscription.data_inicio);
       let month = date.getMonth();
       let year = date.getFullYear();

@@ -27,8 +27,7 @@ function format_data_to_month_year(data) {
   return `${mes}/${ano}`;
 }
 
-function calculate_users_churn_rate(subs) {
-  console.log(subs);
+function calculate_users_churn_rate(subs: user_data[]) {
   const userStatusPerMonth = {};
   const churnRates = {};
   let total = 0;
@@ -36,14 +35,21 @@ function calculate_users_churn_rate(subs) {
   subs.forEach((sub) => {
     const userId = sub.id_assinante;
     const startDate = new Date(sub.data_inicio);
-    const endDate = sub.status === "Ativa" ? new Date() : new Date(sub.data_cancelamento);
+    const endDate = sub.status === "Ativa" || sub.status === "Atrasada" ? new Date() : new Date(sub.data_cancelamento);
     const startMonthYear = format_data_to_month_year(startDate);
     const endMonthYear = format_data_to_month_year(endDate);
+
+    if (isNaN(startDate.getTime())) {
+      console.log(`Invalid start date: ${sub.data_inicio}`);
+    }
+    if (isNaN(endDate.getTime())) {
+      console.log(`Invalid end date: ${sub.data_cancelamento}`);
+    }
 
     userStatusPerMonth[startMonthYear] = userStatusPerMonth[startMonthYear] || { active: new Set(), churned: new Set() };
     userStatusPerMonth[startMonthYear].active.add(userId);
 
-    if (sub.status !== "Ativa") {
+    if (sub.status !== "Ativa" && sub.status !== "Atrasada") {
       userStatusPerMonth[endMonthYear] = userStatusPerMonth[endMonthYear] || { active: new Set(), churned: new Set() };
       userStatusPerMonth[endMonthYear].churned.add(userId);
     }
@@ -57,12 +63,6 @@ function calculate_users_churn_rate(subs) {
     .forEach((monthYear) => {
       const { active, churned }: { active: Set<unknown>; churned: Set<unknown> } = userStatusPerMonth[monthYear];
 
-      console.log(`${monthYear}`);
-      console.log("active : ", active.size);
-
-      console.log("churned: ", churned.size);
-
-      console.log("\n");
       cumulativeActive = new Set([...cumulativeActive, ...active]);
 
       const churnRate = cumulativeActive.size > 0 ? (churned.size / cumulativeActive.size) * 100 : 0;

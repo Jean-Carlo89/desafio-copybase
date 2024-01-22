@@ -136,8 +136,6 @@ describe("Churn tax tests", () => {
   describe("function calculate_active_and_churn_users unit tests", () => {
     // const res = calculate_active_and_churn_users(fake_json_array_1);
 
-    // console.log(res);
-
     it("calculate_active_and_churn_users with 1 item", () => {
       const arragne = [
         {
