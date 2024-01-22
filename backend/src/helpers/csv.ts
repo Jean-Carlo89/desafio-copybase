@@ -3,8 +3,8 @@ import fs from "fs";
 import csv from "csv-parser";
 import { user_data } from "./churn";
 
-const json_array = [];
 export function processCSV(file_path: string) {
+  const json_array = [];
   return new Promise((resolve, reject) => {
     fs.createReadStream(`${path.join(file_path)}`)
       // fs.createReadStream(`${path.join(__dirname, "./example.csv")}`)
@@ -30,6 +30,7 @@ export function processCSV(file_path: string) {
       })
       .on("end", () => {
         console.log("Completed");
+        console.log("Items parsed : ", json_array.length);
         //  console.log(json_array);
         resolve(json_array);
       })

@@ -3,18 +3,24 @@ import multer from "multer";
 import express, { NextFunction, Request, Response } from "express";
 import path from "path";
 import { processCSV } from "../helpers/csv";
-import { caclulateChurnTax, calculateMonthlyChurnTax, calculate_active_and_churn_users, reformatarDadosPorAno, user_data } from "../helpers/churn";
+import { calculateMonthlyChurnTax, user_data } from "../helpers/churn";
+import fs from "fs";
+import { calculate_mrr } from "../helpers/mrr/mrr";
 
 const app = express();
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, "uploads/"); // Set the destination
+    const dir = "uploads/";
+    if (!fs.existsSync(dir)) {
+      fs.mkdirSync(dir, { recursive: true });
+    }
+    cb(null, dir);
   },
   filename: (req, file, cb) => {
     const extension = path.extname(file.originalname);
-    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9); // Add a unique suffix to prevent overwriting files with the same name
-    cb(null, file.fieldname + "-" + uniqueSuffix + extension); // Set the file name
+    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
+    cb(null, file.fieldname + "-" + uniqueSuffix + extension);
   },
 });
 
@@ -44,20 +50,31 @@ app.post("/api/upload", upload.single("file"), async function (req, res) {
   const fileName = req.file.filename;
 
   console.log(fileName);
-  const filePath = path.join(__dirname, "../../uploads", fileName);
+  //const filePath = path.join(__dirname, "../../uploads", fileName);
+
+  const filePath = path.join(__dirname, "../helpers/", "example.csv");
 
   console.log(filePath);
-
   const array_json = await processCSV(filePath);
 
-  //console.log(array_json);
-
+  // console.log(array_json);
   const churn_tax = await calculateMonthlyChurnTax(array_json as user_data[]);
+  const mrr = calculate_mrr(array_json as user_data[]);
 
-  //console.log("here");
+  const data = { churn_tax: churn_tax, mrr };
+  let years = new Set();
 
-  // console.log(churn_tax);
-  return res.send(churn_tax);
+  data.churn_tax.forEach((item) => years.add(item.year));
+  data.mrr.forEach((item) => years.add(item.year));
+
+  let years_array = Array.from(years).map((year) => parseInt(year as any));
+  years_array.sort((a, b) => a - b);
+
+  console.log(years_array);
+
+  const return_data = { ...data, years: years_array };
+
+  return res.send(return_data);
 });
 
 const port = 3001;
