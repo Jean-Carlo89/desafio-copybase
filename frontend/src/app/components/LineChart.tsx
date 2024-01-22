@@ -15,10 +15,6 @@ import {
 
 ChartJS.register(LineElement, CategoryScale, LinearScale, Tooltip, Legend);
 
-// export default function BarChart() {
-//   return <Bar data={data_test} options={}></Bar>;
-// }
-
 type LineChartProps = {
   data: ChartData<'line', number[], string>;
 };

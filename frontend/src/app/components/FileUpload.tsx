@@ -14,8 +14,30 @@ type props = {
       ]
     >
   >;
+
+  setMrr: React.Dispatch<
+    React.SetStateAction<
+      [
+        {
+          year: string;
+          months: {
+            [key: string]: number;
+          };
+        },
+      ]
+    >
+  >;
+
+  setYears: React.Dispatch<React.SetStateAction<never[]>>;
+
+  setSelectedYears: React.Dispatch<React.SetStateAction<never[]>>;
 };
-function FileUpload({ setChurnRate }: props) {
+function FileUpload({
+  setChurnRate,
+  setMrr,
+  setYears,
+  setSelectedYears,
+}: props) {
   const [selectedFile, setSelectedFile] = useState(null);
 
   const handleFileChange = (event) => {
@@ -43,7 +65,10 @@ function FileUpload({ setChurnRate }: props) {
         console.log('File uploaded:', selectedFile);
         console.log('Server response:', response.data);
 
-        setChurnRate(response.data);
+        setChurnRate(response.data.churn_tax);
+        setMrr(response.data.mrr);
+        setYears(response.data.years);
+        setSelectedYears(response.data.years);
       } catch (error) {
         console.error('Error uploading file:', error);
       }

@@ -4,6 +4,8 @@ export function calculate_mrr(array: user_data[]) {
   let items_considered = 0;
   const mrr_by_year_and_month = {};
 
+  const non_considered_items = [];
+
   array.forEach((subscription) => {
     // if (subscription.status === "Ativa") {
     if (subscription.status && parseInt(subscription.quantidade_cobranca) !== 0) {
@@ -48,10 +50,14 @@ export function calculate_mrr(array: user_data[]) {
       }
       items_considered++;
       // }
+    } else {
+      non_considered_items.push(subscription);
     }
   });
 
   console.log("items considered for mrr: ", items_considered);
+
+  console.log(non_considered_items);
   return Object.keys(mrr_by_year_and_month).map((year) => {
     return { year: year, months: mrr_by_year_and_month[year] };
   });
