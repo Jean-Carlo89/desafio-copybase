@@ -4,8 +4,5 @@
         {
             "src": "./dist/app.js"
         }
-    ],
-    "engines": {
-        "node": "18.17.1"
-    }
+    ]
 }
