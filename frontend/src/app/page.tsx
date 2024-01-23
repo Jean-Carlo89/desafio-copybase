@@ -30,7 +30,7 @@ export default function Home() {
   const fake_monthly_churn_rate = fake_churn_rate;
 
   useEffect(() => {
-    setCurrentMetric('mrr');
+    setCurrentMetric('MRR');
   }, []);
 
   function handleYearSelection(year: string) {
@@ -46,8 +46,8 @@ export default function Home() {
   }
 
   return (
-    <main className=" min-w-[700px] min-h-[700px] border-4 border-green-200  ">
-      <div className="flex flex-col h-full w-[85%] border-4 border-red-200 mx-auto ">
+    <main className=" min-w-[700px] min-h-[700px]  ">
+      <div className="flex flex-col h-full w-[85%]  mx-auto ">
         {' '}
         <FileUpload
           setChurnRate={setChurnRate}
@@ -82,7 +82,7 @@ export default function Home() {
             </label>
           ))}
         </div>
-        <div className=" w-[1200px] h-[800px] border-2 border-yellow-100 mx-auto">
+        <div className=" w-[1200px] h-[800px] border-4 border-orange-100 mx-auto">
           {renderChart(currentMetric)}
         </div>
       </div>
@@ -123,7 +123,7 @@ export default function Home() {
         };
 
         return (
-          <div className="  border-4 border-orange-100 ">
+          <div className="   ">
             <BarChart
               metric_array={churnRate}
               selectedYears={selectedYears}

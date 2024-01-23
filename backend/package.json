@@ -3,12 +3,10 @@
   "version": "1.0.0",
   "description": "",
   "main": "mmr.js",
-  "engines": {
-    "node": "18.x"
-  },
   "scripts": {
-    "build": "tsc",
-    "start": "nodemon ./src/express/app.ts",
+    "build": "npm run clean && tsc",
+    "clean": "rm -rf ./src/dist",
+    "start": " npm run build && node ./src/dist/express/app.js",
     "dev:test": "nodemon ./src/helpers/test.ts",
     "dev": "nodemon ./src/express/app.ts",
     "pm2:start": " npm run build && pm2 start ./src/dist/express/app.js"
