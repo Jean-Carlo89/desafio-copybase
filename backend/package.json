@@ -3,9 +3,12 @@
   "version": "1.0.0",
   "description": "",
   "main": "mmr.js",
+  "engines": {
+    "node": "18.x"
+  },
   "scripts": {
     "build": "tsc",
-    "start": "node ./src/dist/express/app.js",
+    "start": "nodemon ./src/express/app.ts",
     "dev:test": "nodemon ./src/helpers/test.ts",
     "dev": "nodemon ./src/express/app.ts",
     "test": "jest"
