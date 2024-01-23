@@ -52,9 +52,9 @@ function FileUpload({
       formData.append('file', selectedFile);
 
       console.log('url');
-      const url =
-        `${process.env.NEXT_PUBLIC_API}/api/upload` ||
-        'http://localhost:3001/api/upload';
+      const url = process.env.NEXT_PUBLIC_API
+        ? `${process.env.NEXT_PUBLIC_API}/api/upload`
+        : 'http://localhost:3001/api/upload';
       console.log(url);
       try {
         const response = await axios.post(url, formData, {
