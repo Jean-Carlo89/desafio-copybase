@@ -1,5 +1,5 @@
 import exp from "constants";
-import { calculateMonthlyChurnTax, calculate_active_and_churn_users } from "../churn";
+import { calculateMonthlyChurnTax } from "../src/helpers/churn";
 const fake_json_array_2 = [
   {
     quantidade_cobranca: "1",

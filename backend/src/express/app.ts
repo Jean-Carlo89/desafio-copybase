@@ -48,6 +48,10 @@ app.use(express.text());
 
 app.use(express.urlencoded({ extended: true }));
 
+app.get("/", (req, res) => {
+  return res.status(200).send("Application on");
+});
+
 app.post("/api/upload", upload.single("file"), async function (req, res) {
   try {
     const fileName = req.file.filename;
