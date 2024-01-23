@@ -3,12 +3,12 @@
     "builds": [
         {
             "src": "./dist/express/app.js",
-            "use": "@18.17.1/node"
+            "use": "@vercel/node"
         }
     ],
     "routes": [
         {
-            "src": "/(.*)",
+            "src": "(.*)",
             "dest": "dist/express/app.js"
         }
     ]
