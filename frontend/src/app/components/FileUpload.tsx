@@ -51,6 +51,8 @@ function FileUpload({
 
       formData.append('file', selectedFile);
 
+      console.log('url');
+      console.log(process.env.NEXT_PUBLIC_API);
       try {
         const response = await axios.post(
           process.env.NEXT_PUBLIC_API || 'http://localhost:3001/api/upload',
