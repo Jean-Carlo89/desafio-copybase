@@ -52,17 +52,16 @@ function FileUpload({
       formData.append('file', selectedFile);
 
       console.log('url');
-      console.log(process.env.NEXT_PUBLIC_API);
+      const url =
+        `${process.env.NEXT_PUBLIC_API}/api/upload` ||
+        'http://localhost:3001/api/upload';
+      console.log(url);
       try {
-        const response = await axios.post(
-          process.env.NEXT_PUBLIC_API || 'http://localhost:3001/api/upload',
-          formData,
-          {
-            headers: {
-              'Content-Type': 'multipart/form-data',
-            },
+        const response = await axios.post(url, formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
           },
-        );
+        });
 
         console.log('File uploaded:', selectedFile);
         console.log('Server response:', response.data);
