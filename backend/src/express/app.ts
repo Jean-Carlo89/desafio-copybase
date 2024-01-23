@@ -30,7 +30,7 @@ const upload = multer({ storage: storage });
 
 app.use(
   cors({
-    origin: ["http://localhost:3000", "*", "https://desafio-copybase-front.vercel.app"],
+    origin: ["http://localhost:3000", "*", "https://desafio-copybase-front.vercel.app", "http://18.188.156.119:3000"],
 
     methods: ["GET", "POST", "DELETE", "PUT", "HEAD", "PATCH", "OPTIONS"],
 
