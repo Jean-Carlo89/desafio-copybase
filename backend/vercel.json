@@ -2,8 +2,14 @@
     "version": 2,
     "builds": [
         {
-            "src": "./dist/app.js",
+            "src": "./dist/express/app.js",
             "use": "@18.17.1/node"
+        }
+    ],
+    "routes": [
+        {
+            "src": "/(.*)",
+            "dest": "dist/express/app.js"
         }
     ]
 }
