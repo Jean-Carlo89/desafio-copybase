@@ -53,7 +53,7 @@ function FileUpload({
 
       try {
         const response = await axios.post(
-          'http://localhost:3001/api/upload',
+          process.env.NEXT_PUBLIC_API || 'http://localhost:3001/api/upload',
           formData,
           {
             headers: {
