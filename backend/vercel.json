@@ -2,7 +2,8 @@
     "version": 2,
     "builds": [
         {
-            "src": "./dist/app.js"
+            "src": "./dist/app.js",
+            "use": "@18.17.1/node"
         }
     ]
 }
