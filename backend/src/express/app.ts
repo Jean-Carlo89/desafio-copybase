@@ -13,7 +13,7 @@ const app = express();
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    const dir = "uploads/";
+    const dir = path.join(__dirname, "/uploads");
     if (!fs.existsSync(dir)) {
       fs.mkdirSync(dir, { recursive: true });
     }
@@ -56,7 +56,7 @@ app.post("/api/upload", upload.single("file"), async function (req, res) {
   try {
     const fileName = req.file.filename;
 
-    const filePath = path.join(__dirname, "../../uploads", fileName);
+    const filePath = path.join(__dirname, "/uploads", fileName);
 
     const fileExtension = path.extname(fileName).toLowerCase();
 

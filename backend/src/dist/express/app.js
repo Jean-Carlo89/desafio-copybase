@@ -27,7 +27,7 @@ const app = (0, express_1.default)();
 exports.app = app;
 const storage = multer_1.default.diskStorage({
     destination: (req, file, cb) => {
-        const dir = "uploads/";
+        const dir = path_1.default.join(__dirname, "/uploads");
         if (!fs_1.default.existsSync(dir)) {
             fs_1.default.mkdirSync(dir, { recursive: true });
         }
@@ -41,7 +41,7 @@ const storage = multer_1.default.diskStorage({
 });
 const upload = (0, multer_1.default)({ storage: storage });
 app.use((0, cors_1.default)({
-    origin: ["http://localhost:3000", "*", "https://desafio-copybase-front.vercel.app"],
+    origin: ["http://localhost:3000", "*", "https://desafio-copybase-front.vercel.app", "http://18.188.156.119:3000"],
     methods: ["GET", "POST", "DELETE", "PUT", "HEAD", "PATCH", "OPTIONS"],
     maxAge: 864000,
     allowedHeaders: ["Content-Type", "Authorization"],
@@ -57,7 +57,7 @@ app.post("/api/upload", upload.single("file"), function (req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             const fileName = req.file.filename;
-            const filePath = path_1.default.join(__dirname, "../../uploads", fileName);
+            const filePath = path_1.default.join(__dirname, "/uploads", fileName);
             const fileExtension = path_1.default.extname(fileName).toLowerCase();
             //const filePath = path.join(__dirname, "../helpers/", "example.csv");
             let array_json;
