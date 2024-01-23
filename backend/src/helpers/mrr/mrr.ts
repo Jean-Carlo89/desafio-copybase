@@ -55,9 +55,9 @@ export function calculate_mrr(array: user_data[]) {
     }
   });
 
-  console.log("items considered for mrr: ", items_considered);
+  // console.log("items considered for mrr: ", items_considered);
 
-  console.log(non_considered_items);
+  // console.log(non_considered_items);
   return Object.keys(mrr_by_year_and_month).map((year) => {
     return { year: year, months: mrr_by_year_and_month[year] };
   });
