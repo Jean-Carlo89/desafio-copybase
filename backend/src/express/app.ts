@@ -48,7 +48,7 @@ app.use(express.text());
 
 app.use(express.urlencoded({ extended: true }));
 
-app.get("/", (req, res) => {
+app.get("/test", (req, res) => {
   return res.status(200).send("Application on");
 });
 
