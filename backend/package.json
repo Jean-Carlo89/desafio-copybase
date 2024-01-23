@@ -5,7 +5,7 @@
   "main": "mmr.js",
   "scripts": {
     "build": "tsc",
-    "start": "node dist/app.js",
+    "start": "node ./src/dist/express/app.js",
     "dev:test": "nodemon ./src/helpers/test.ts",
     "dev": "nodemon ./src/express/app.ts",
     "test": "jest"
