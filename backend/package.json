@@ -4,7 +4,7 @@
   "description": "",
   "main": "mmr.js",
   "scripts": {
-    "build": "npm run clean && tsc",
+    "build": "tsc",
     "clean": "rm -rf ./src/dist",
     "start": " npm run build && node ./src/dist/express/app.js",
     "dev:test": "nodemon ./src/helpers/test.ts",
