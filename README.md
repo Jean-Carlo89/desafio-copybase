@@ -35,4 +35,4 @@
 
     II. 
 
-      ### `npm run start:express`
+      ### `npm run dev`
