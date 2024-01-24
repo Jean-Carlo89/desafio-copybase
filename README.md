@@ -1,3 +1,5 @@
+# Deploy Link in AWS EC2  : 18.188.156.119:3000/
+
 # Case 
 
 ## Como Rodar: 
