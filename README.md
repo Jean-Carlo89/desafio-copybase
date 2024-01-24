@@ -6,6 +6,8 @@
 
 ## Como Rodar: 
 
+obs: o front e back estão setados para rodar respectivamente nas protas 3000 e 3001
+
 ## 1 . Por Docker Compose 
 
  1. No terminal da folder contendo o arquivo docker-compose.yaml 
